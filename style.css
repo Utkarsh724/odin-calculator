@@ -1,5 +1,9 @@
-.display {
+.display,.display2 {
     background-color: aqua;
     width: 10%;
     text-align: center;
+}
+
+.display2 {
+    background-color: orange;
 }
