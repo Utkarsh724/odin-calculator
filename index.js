@@ -31,9 +31,14 @@ const operate = function(num1, operator, num2)
 }
 
 const display = function(){
-    if(screen.textContent=='0'||screen.textContent=='Syntax Error')
+    if(screen.textContent=='0'||screen.textContent=='Syntax Error'||
+    screen.textContent=='Math Error')
     {
         screen.textContent = '';
+    }
+    if(this.textContent=='.' && decimalCheck())
+    {
+        return;
     }
     if( pushElement(this.textContent)!="error" )
     {
@@ -43,7 +48,7 @@ const display = function(){
 
 const pushElement = function(element)
 {
-    if(!Number.isInteger(parseInt(element)) && exp.length==3)
+    if( (element=='+'||element=='-'||element=='*'||element=='/') && exp.length==3)
     {
         if(syntaxErrorCheck())
         {
@@ -51,6 +56,13 @@ const pushElement = function(element)
             screen.textContent = 'Syntax Error';
             return "error";
         }
+        else if(exp[1]=='/' && parseFloat(exp[2])==0)
+        {
+            clearDisplay();
+            screen.textContent = 'Math Error';
+            return "error";
+        }
+
         evaluateExpression();
     }
     
@@ -58,11 +70,13 @@ const pushElement = function(element)
     {
         exp.push(element);
     }
-    else if(Number.isInteger(parseInt(element)) && Number.isInteger(parseInt(exp[exp.length-1])))
+    else if( !(element=='+'||element=='-'||element=='*'||element=='/') && 
+    !(exp[exp.length-1]=='+'||exp[exp.length-1]=='-'||exp[exp.length-1]=='*'||
+    exp[exp.length-1]=='/'))
     {
         exp[exp.length-1]+=element;
     }
-    else if(!Number.isInteger(parseInt(element)))
+    else if(element=='+'||element=='-'||element=='*'||element=='/')
     {
         exp.push(element);
     }
@@ -78,8 +92,9 @@ const syntaxErrorCheck = function() //0 handling left
     {
         return true;
     }
-    if( !(Number.isInteger(parseInt(exp[0])) && !Number.isInteger(parseInt(exp[1])) && 
-    Number.isInteger(parseInt(exp[2]))) )
+    if( !(!(exp[0]=='+'||exp[0]=='-'||exp[0]=='*'||exp[0]=='/'||exp[0]=='.') && 
+    (exp[1]=='+'||exp[1]=='-'||exp[1]=='*'||exp[1]=='/') && 
+    !(exp[2]=='+'||exp[2]=='-'||exp[2]=='*'||exp[2]=='/'||exp[2]=='.') ))
     {
         return true;
     }
@@ -99,9 +114,14 @@ const evaluateExpression = function() //Decimal, backspace
             clearDisplay();
         }
     }
+    else if(exp[1]=='/' && parseFloat(exp[2])==0)
+    {
+        clearDisplay();
+        screen.textContent = 'Math Error';
+    }
     else
     {
-        result = operate(parseInt(exp[0]),exp[1],parseInt(exp[2]));
+        result = operate(parseFloat(exp[0]),exp[1],parseFloat(exp[2])).toFixed(2);
         exp.splice(0,3,result);
         screen.textContent = `${exp[0]}`;
         screen2.textContent = `${exp[0]}`;
@@ -112,6 +132,14 @@ const clearDisplay = function(){
     screen.textContent = '0';
     screen2.textContent = '0';
     exp = [];
+}
+
+const decimalCheck = function()
+{
+    if(exp.length==0)
+    return false;
+    else if(exp[exp.length-1].includes('.'))
+    return true;
 }
 
 let exp = [];
@@ -130,6 +158,9 @@ clearButton.addEventListener('click', clearDisplay);
 
 const evaluateButton = document.querySelector('.evaluate');
 evaluateButton.addEventListener('click',evaluateExpression);
+
+const decimalButton = document.querySelector('.decimal');
+decimalButton.addEventListener('click',display);
 
 
 
