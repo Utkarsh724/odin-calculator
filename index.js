@@ -31,18 +31,19 @@ const operate = function(num1, operator, num2)
 }
 
 const display = function(){
+    let text = this.textContent;
     if(screen.textContent=='0'||screen.textContent=='Syntax Error'||
     screen.textContent=='Math Error')
     {
         screen.textContent = '';
     }
-    if(this.textContent=='.' && decimalCheck())
+    if(text=='.' && decimalCheck())
     {
         return;
     }
-    if( pushElement(this.textContent)!="error" )
+    if( pushElement(text)!="error" )
     {
-        screen.textContent += `${this.textContent}`;
+        screen.textContent += `${text}`;
     }
 }
 
@@ -183,7 +184,7 @@ const numbers = document.querySelectorAll('.num');
 numbers.forEach( button => button.addEventListener('click',display) );
 
 const operators = document.querySelectorAll('.operators');
-operators.forEach( button => button.addEventListener('click',display) );
+operators.forEach( button => button.addEventListener('click',display)) ;
 
 const clearButton = document.querySelector('.clear');
 clearButton.addEventListener('click', clearDisplay);
@@ -196,4 +197,37 @@ decimalButton.addEventListener('click',display);
 
 const deleteButton = document.querySelector('.delete');
 deleteButton.addEventListener('click',deleteElement);
+
+document.addEventListener('keydown',function(e)
+{
+    if(e.key=='0'||e.key=='1'||e.key=='2'||e.key=='3'||e.key=='4'||e.key=='5'||e.key=='6'||
+    e.key=='7'||e.key=='8'||e.key=='9'||e.key=='+'||e.key=='-'||e.key=='*'||e.key=='/'||e.key=='.')
+    {
+        if(screen.textContent=='0'||screen.textContent=='Syntax Error'||
+        screen.textContent=='Math Error')
+        {
+            screen.textContent = '';
+        }
+        if(e.key=='.' && decimalCheck())
+        {
+            return;
+        }
+        if( pushElement(e.key)!="error" )
+        {
+            screen.textContent += `${e.key}`;
+        }
+    }
+    else if(e.key=='=')
+    {
+        evaluateExpression();
+    }
+    else if(e.key=='Backspace')
+    {
+        deleteElement();
+    }
+    else if(e.key=='Escape')
+    {
+        clearDisplay();
+    }
+})
 
