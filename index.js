@@ -142,6 +142,38 @@ const decimalCheck = function()
     return true;
 }
 
+const deleteElement = function()
+{
+    if(exp.length==0)
+    return;
+    else if(exp[exp.length-1]=='+'||exp[exp.length-1]=='-'||exp[exp.length-1]=='*'
+    ||exp[exp.length-1]=='/')
+    {
+        if(exp.length==1)
+        clearDisplay();
+        else
+        {
+            exp.pop();
+            screen.textContent = screen.textContent.slice(0,-1);
+        }
+    }
+    else if(exp[exp.length-1].length==1)
+    {
+        if(exp.length==1)
+        clearDisplay();
+        else
+        {
+            exp.pop();
+            screen.textContent = screen.textContent.slice(0,-1);
+        }
+    }
+    else
+    {
+        exp[exp.length-1] = exp[exp.length-1].slice(0,-1);
+        screen.textContent = screen.textContent.slice(0,-1);
+    }
+}
+
 let exp = [];
 
 const screen = document.querySelector('.display');
@@ -162,5 +194,6 @@ evaluateButton.addEventListener('click',evaluateExpression);
 const decimalButton = document.querySelector('.decimal');
 decimalButton.addEventListener('click',display);
 
-
+const deleteButton = document.querySelector('.delete');
+deleteButton.addEventListener('click',deleteElement);
 
