@@ -31,25 +31,25 @@ const operate = function(num1, operator, num2)
 }
 
 const display = function(){
-    let text = this.textContent;
     if(screen.textContent=='0'||screen.textContent=='Syntax Error'||
     screen.textContent=='Math Error')
     {
         screen.textContent = '';
     }
-    if(text=='.' && decimalCheck())
+    if(this.textContent=='.' && decimalCheck())
     {
         return;
     }
-    if( pushElement(text)!="error" )
+    if( pushElement(this.textContent)!="error" )
     {
-        screen.textContent += `${text}`;
+        screen.textContent += `${this.textContent}`;
     }
 }
 
 const pushElement = function(element)
 {
-    if( (element=='+'||element=='-'||element=='*'||element=='/') && exp.length==3)
+    if( ((element=='+'||element=='-'||element=='*'||element=='/') && exp.length==3) || 
+    (exp[2]=='+'||exp[2]=='-'||exp[2]=='*'||exp[2]=='/'))
     {
         if(syntaxErrorCheck())
         {
@@ -87,9 +87,13 @@ const pushElement = function(element)
     }
 }
 
-const syntaxErrorCheck = function() //0 handling left
+const syntaxErrorCheck = function() 
 {
     if(exp.length!=3)
+    {
+        return true;
+    }
+    if(exp[0]=='+'||exp[0]=='-'||exp[0]=='*'||exp[0]=='/')
     {
         return true;
     }
